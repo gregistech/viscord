@@ -21,6 +21,7 @@ class UIMain(object):
     def setup_ui(self, stdscr):
         """This is called by the curses wrapper, it configures the main window, makes the bars and starts the UI loop."""
         UIUtils.configure_main_window(stdscr)
+        self.stdscr = stdscr
         self.com_interpreter = CommandInterpreter()
         self.top_bar = UIWindows.TopBar()
         self.bottom_bar = UIWindows.BottomBar()
@@ -53,7 +54,7 @@ class UIMain(object):
             pass
         finally:
             self.loop_queue.put(tuple(task_args))
-
+    
     def handle_user_input(self):
             c = self.bottom_bar.get_input()
             if c == -1 or c > 255:

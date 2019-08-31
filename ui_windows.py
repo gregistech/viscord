@@ -5,6 +5,10 @@ from ui_utils import UIUtils
 class UIWindows(object):
     class BaseWindow(object):
         """Base class for windows."""
+        def __init__(self, name):
+            self.name = name
+            self.resize_window()
+
         def clear_window(self):
             self.win.erase()
 
@@ -31,9 +35,12 @@ class UIWindows(object):
             self.add_string(new_text)
             self.refresh_window()
 
+        def resize_window(self):
+            self.win = UIUtils.make_window(self.name)
+
     class TopBar(BaseWindow):
         def __init__(self):
-            self.win = UIUtils.make_window("top_bar")
+            super().__init__("top_bar")
             self.guild = self.channel = self.topic = ""
             self.change_text("Welcome to Viscord! Use :help to get help!")
 
@@ -46,7 +53,7 @@ class UIWindows(object):
 
     class BottomBar(BaseWindow):
         def __init__(self):
-            self.win = UIUtils.make_window("bottom_bar")
+            super().__init__("bottom_bar")
             self.is_user_input = False
             self.is_pagination_active = False
             self.pagination_pages = []
@@ -115,7 +122,7 @@ class UIWindows(object):
 
     class ChatBody(BaseWindow):
         def __init__(self):
-            self.win = UIUtils.make_window("chat_body")
+            super().__init__("chat_body")
             self.chat_log = []
             self.displayed_chat_log = []
         
