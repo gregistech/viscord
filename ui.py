@@ -54,39 +54,53 @@ class UIMain(object):
             pass
         finally:
             self.loop_queue.put(tuple(task_args))
-    
+
+    def handle_key(self, key_name):
+        if key_name == "esc":
+            self.bottom_bar.is_user_input = False
+            self.bottom_bar.is_pagination_active = False
+            self.bottom_bar.current_command = ""
+        elif key_name == ":":
+            self.bottom_bar.clear_window()
+            self.bottom_bar.is_user_input = True
+        elif key_name == "enter0":
+            com = self.com_interpreter.interpret(self.bottom_bar.current_command)
+            self.handle_command(com)
+            self.bottom_bar.clear_window()
+            self.bottom_bar.current_command = ""
+            self.bottom_bar.is_user_input = False
+        elif key_name == "enter1":
+            self.bottom_bar.is_user_input = False
+        elif key_name == "enter2":
+            self.bottom_bar.show_next_page()
+        elif key_name == "backspace":
+            if self.bottom_bar.delete_last_char():
+                self.bottom_bar.current_command = self.bottom_bar.current_command[0:-1]
+
     def handle_user_input(self):
             c = self.bottom_bar.get_input()
             if c == -1 or c > 255:
                 return
             if c == 27:
-                    self.bottom_bar.is_user_input = False
-                    self.bottom_bar.is_pagination_active = False
-                    self.bottom_bar.current_command = ""
+                    self.handle_key("esc")
             if not self.bottom_bar.is_pagination_active:
                 if c == 58 and not self.bottom_bar.is_user_input:
-                    self.bottom_bar.clear_window()
-                    self.bottom_bar.is_user_input = True
+                    self.handle_key(":")
                 if self.bottom_bar.is_user_input:
                     if c == 10: 
                         if len(self.bottom_bar.current_command) > 0:
-                            com = self.com_interpreter.interpret(self.bottom_bar.current_command)
-                            self.handle_command(com)
-                            self.bottom_bar.clear_window()
-                            self.bottom_bar.current_command = ""
-                            self.bottom_bar.is_user_input = False
+                            self.handle_key("enter0")
                         else:
-                            self.bottom_bar.is_user_input = False
+                            self.handle_key("enter1")
                     elif c == 127:
-                        if self.bottom_bar.delete_last_char():
-                            self.bottom_bar.current_command = self.bottom_bar.current_command[0:-1]
+                        self.handle_key("backspace")
                     else:
                         c = chr(c)
                         if self.bottom_bar.add_user_char(c):
                             self.bottom_bar.current_command += c
             else:
                 if c == 10:
-                    self.bottom_bar.show_next_page()
+                    self.handle_key("enter2")
 
     def ui_loop(self):
         while True:
