@@ -14,7 +14,7 @@ from discord_api import DiscordAPI
 def get_token():
     try:
         return os.environ["VISCORD_TOKEN"]
-    except IndexError:
+    except KeyError:
         print("You need to set the VISCORD_TOKEN environment variable to your token!")
         os._exit(1)
 
