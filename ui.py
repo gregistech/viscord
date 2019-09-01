@@ -46,6 +46,7 @@ class UIMain(object):
 
     def handle_command(self, com):
         if not com[0] in self.commands.keys():
+            self.bottom_bar.change_text("This command does not exists!")
             return
         task_args = self.commands[com[0]]
         try:
