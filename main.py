@@ -11,6 +11,21 @@ from queue import Queue
 from system import System
 from discord_api import DiscordAPI
 
+def get_token():
+    try:
+        return os.environ["VISCORD_TOKEN"]
+    except IndexError:
+        print("You need to set the VISCORD_TOKEN environment variable to your token!")
+        os._exit(1)
+
+def start_client(client, token):
+    try:
+        client.run(token, bot = False)
+    except AttributeError:
+        print("Discord API fucked up again! DAMMIT")
+    finally:
+        os._exit(1)
+
 class ViscordClient(discord.Client):
     def __init__(self):
         super().__init__()
@@ -67,5 +82,5 @@ class ViscordClient(discord.Client):
                     self.ui_queue.put(("top_bar", "change_text", (f"{msg.author}: {msg.content}",) ))
 
 client = ViscordClient()
-token = os.environ["VISCORD_TOKEN"]
-client.run(token, bot = False)
+token = get_token()
+start_client(client, token)
