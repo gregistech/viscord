@@ -7,7 +7,7 @@ from ui_windows import UIWindows
 from command_interpreter import CommandInterpreter
 from threading import Thread
 
-class UIMain():
+class UIMain:
     def __init__(self, loop_queue, ui_queue):
         self.loop_queue, self.ui_queue = loop_queue, ui_queue
         self.commands = {

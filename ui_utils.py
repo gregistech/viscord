@@ -1,6 +1,6 @@
 import curses
 
-class UIUtils():
+class UIUtils:
     def make_window(win_type):
         """This creates a specific type of 'window'."""
         if win_type == "top_bar":

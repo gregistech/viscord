@@ -2,8 +2,8 @@ import curses
 
 from ui_utils import UIUtils
 
-class UIWindows():
-    class BaseWindow():
+class UIWindows:
+    class BaseWindow:
         """Base class for windows."""
         def __init__(self, name):
             self.name = name

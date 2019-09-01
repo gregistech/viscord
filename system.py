@@ -1,6 +1,6 @@
 import os
 
-class System():
+class System:
     def exit(self):
         os._exit(0)
 
