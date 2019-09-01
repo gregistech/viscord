@@ -21,3 +21,24 @@ I hope soon.
 5. Click on one of the options that you got.
 6. Search for a property called authorization.
 7. Profit!
+
+## Development
+
+## Setting your token
+
+See [the FAQ section](#how-can-i-get-my-token) to get your token.
+```bash
+export VISCORD_TOKEN="token"
+```
+You can run the above snippet in your shell to set your token temporarily.
+You can also create a file like `set_token.sh` to save your token.
+Be sure not to commit your token.
+
+## Using a virtual environment
+
+To create a virtual environment and install dependencies:
+```bash
+$ python -m venv ./virtenv # create the virtual env, be sure to use python3
+$ source ./virtenv/bin/activate # use the right variant for your shell {,.fish,.csh}
+$ pip install -r requirements.txt # install dependencies
+```
