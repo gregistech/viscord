@@ -1,6 +1,6 @@
 import discord
 
-class DiscordAPI(object):
+class DiscordAPI:
     def __init__(self, client, loop_queue, ui_queue):
         self.loop_queue, self.ui_queue = loop_queue, ui_queue
         self.client = client
