@@ -24,7 +24,7 @@ I hope soon.
 
 ## Development
 
-## Setting your token
+### Setting your token
 
 See [the FAQ section](#how-can-i-get-my-token) to get your token.
 ```bash
@@ -34,7 +34,7 @@ You can run the above snippet in your shell to set your token temporarily.
 You can also create a file like `set_token.sh` to save your token.
 Be sure not to commit your token.
 
-## Using a virtual environment
+### Using a virtual environment
 
 To create a virtual environment and install dependencies:
 ```bash
