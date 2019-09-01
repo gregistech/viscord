@@ -84,25 +84,24 @@ class UIMain(object):
                 return
             if c == 27:
                     self.handle_key("esc")
-            if not self.bottom_bar.is_pagination_active:
-                if c == 58 and not self.bottom_bar.is_user_input:
-                    self.handle_key(":")
-                if self.bottom_bar.is_user_input:
-                    if c == 10: 
-                        if len(self.bottom_bar.current_command) > 0:
-                            self.handle_key("enter0")
-                        else:
-                            self.handle_key("enter1")
-                    elif c == 127:
-                        self.handle_key("backspace")
-                    else:
-                        c = chr(c)
-                        if self.bottom_bar.add_user_char(c):
-                            self.bottom_bar.current_command += c
-            else:
+            if self.bottom_bar.is_pagination_active:
                 if c == 10:
                     self.handle_key("enter2")
-
+                    return
+            if c == 58 and not self.bottom_bar.is_user_input:
+                self.handle_key(":")
+            if self.bottom_bar.is_user_input:
+                if c == 10: 
+                    if len(self.bottom_bar.current_command) > 0:
+                        self.handle_key("enter0")
+                    else:
+                        self.handle_key("enter1")
+                elif c == 127:
+                    self.handle_key("backspace")
+                else:
+                    c = chr(c)
+                    if self.bottom_bar.add_user_char(c):
+                        self.bottom_bar.current_command += c
     def ui_loop(self):
         while True:
             self.handle_user_input()
