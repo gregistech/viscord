@@ -31,7 +31,7 @@ See [the FAQ section](#how-can-i-get-my-token) to get your token.
 export VISCORD_TOKEN="token"
 ```
 You can run the above snippet in your shell to set your token temporarily.
-You can also create a file like `set_token.sh` to save your token.
+You can also create a file like `set_token.sh` to save your token. You will need to run `source set_token.sh` so it will apply to your current shell.
 Be sure not to commit your token.
 
 ### Using a virtual environment
