@@ -2,9 +2,9 @@ import curses
 import sys
 import queue
 
-from ui_utils import UIUtils
-from ui_windows import UIWindows
-from command_interpreter import CommandInterpreter
+from ui.ui_utils import UIUtils
+from ui.ui_windows import UIWindows
+from utils.command_interpreter import CommandInterpreter
 from threading import Thread
 
 class UIMain:

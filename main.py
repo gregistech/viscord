@@ -5,11 +5,11 @@ import inspect
 import asyncio
 
 from threading import Thread
-from ui import UIMain
 from curses import wrapper
 from queue import Queue
-from system import System
-from discord_api import DiscordAPI
+from utils.system import System
+from utils.discord_api import DiscordAPI
+from ui.ui import UIMain
 
 def get_token():
     try:

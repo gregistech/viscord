@@ -1,6 +1,6 @@
 import curses
 
-from ui_utils import UIUtils
+from ui.ui_utils import UIUtils
 
 class UIWindows:
     class BaseWindow:
