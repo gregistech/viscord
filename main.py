@@ -37,9 +37,8 @@ class ViscordClient(discord.Client):
         ui_main = UIMain(self.loop_queue, self.ui_queue)
         wrapper(ui_main.setup_ui)
     
-    def start_loop(self):
-        loop = asyncio.new_event_loop()
-        loop.run_until_complete(self.async_start_loop())
+    def start_loop(self, loop):
+        asyncio.run_coroutine_threadsafe(self.async_start_loop(), loop)
 
     async def async_start_loop(self):
         while True:
@@ -72,14 +71,14 @@ class ViscordClient(discord.Client):
         ui_task = Thread(target=self.start_ui, name="ui_thread")
         ui_task.start()
 
-        loop_task = Thread(target=self.start_loop, name="loop_thread")
+        loop_task = Thread(target=self.start_loop, name="loop_thread", args=(asyncio.get_running_loop(),))
         loop_task.start()
 
     async def on_message(self, msg):
         if msg.author != self.discord_api.client.user:
             if msg.guild == self.discord_api.current_guild:
                 if msg.channel == self.discord_api.current_channel:
-                    self.ui_queue.put(("top_bar", "change_text", (f"{msg.author}: {msg.content}",) ))
+                    pass
 
 client = ViscordClient()
 token = get_token()
