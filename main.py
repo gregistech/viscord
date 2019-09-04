@@ -75,10 +75,9 @@ class ViscordClient(discord.Client):
         loop_task.start()
 
     async def on_message(self, msg):
-        if msg.author != self.discord_api.client.user:
-            if msg.guild == self.discord_api.current_guild:
-                if msg.channel == self.discord_api.current_channel:
-                    pass
+        if msg.guild == self.discord_api.current_guild:
+            if msg.channel == self.discord_api.current_channel:
+                self.ui_queue.put(("chat_body", "add_to_chat_log", (msg,)))
 
 client = ViscordClient()
 token = get_token()

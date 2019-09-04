@@ -21,7 +21,7 @@ class UIWindows:
         def get_input(self):
             return self.win.getch()
         
-        def add_string(self, string, y = None, x = None):
+        def add_string(self, string, refresh = True, y = None, x = None):
             if y != None and x != None:
                 x_offset = 0
                 for c in string:
@@ -32,7 +32,8 @@ class UIWindows:
                     x_offset += 1
             else:
                 self.win.addstr(string)
-            self.refresh_window()
+            if refresh:
+                self.refresh_window()
 
         def add_char(self, char, y, x):
             self.win.addstr(y, x, char)
@@ -145,12 +146,14 @@ class UIWindows:
             self.refresh_chat_log()
         
         def add_to_chat_log(self, message):
-            pass
+            self.chat_log.append(message)
+            self.refresh_chat_log()
 
         def refresh_chat_log(self):
             self.win = curses.newpad(len(self.chat_log), curses.COLS - 1)
             y_pos = curses.LINES - 2
             for i in self.chat_log:
-                self.add_string(f"{i.author}: {i.content}", y_pos, 0)
+                self.add_string(f"{i.author}: {i.content}", False, y_pos, 0)
                 y_pos -= 1
+            self.refresh_window()
                 
