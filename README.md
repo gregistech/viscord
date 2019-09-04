@@ -42,3 +42,8 @@ $ python3 -m venv ./virtenv # create the virtual env
 $ source ./virtenv/bin/activate # use the right variant for your shell {,.fish,.csh}
 $ pip3 install -r requirements.txt # install dependencies
 ```
+to deactivate the virtual environment use the `deactivate` function like so:
+```bash
+$ deactivate
+```
+You can always use `$ source ./virtenv/bin/activate` to activate your virtual environment.
