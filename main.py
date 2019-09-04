@@ -36,14 +36,14 @@ class ViscordClient(discord.Client):
     def start_ui(self):
         ui_main = UIMain(self.loop_queue, self.ui_queue)
         wrapper(ui_main.setup_ui)
-    
+
     def start_loop(self, loop):
         asyncio.run_coroutine_threadsafe(self.async_start_loop(), loop)
 
     async def async_start_loop(self):
         while True:
             await self.handle_queue_tasks()
-    
+
     async def handle_queue_tasks(self):
         try:
             new_task = self.loop_queue.get()

@@ -6,7 +6,7 @@ class DiscordAPI:
         self.client = client
         self.current_guild = None
         self.current_channel = None
-    
+
     async def switch_to_channel(self, channel_name):
         if channel_name == None:
             self.current_channel = None
@@ -33,7 +33,7 @@ class DiscordAPI:
             self.ui_queue.put(("bottom_bar", "change_text", (f"You changed to guild {guild.name}!",)))
             return
         self.ui_queue.put(("bottom_bar", "change_text", ("This guild is not available!",)))
-    
+
     async def get_all_channels(self):
         if self.current_guild:
             channels = self.current_guild.text_channels

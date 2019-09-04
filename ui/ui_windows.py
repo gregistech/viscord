@@ -20,7 +20,7 @@ class UIWindows:
 
         def get_input(self):
             return self.win.getch()
-        
+
         def add_string(self, string, refresh = True, y = None, x = None):
             if y != None and x != None:
                 x_offset = 0
@@ -71,7 +71,7 @@ class UIWindows:
             self.is_pagination_active = False
             self.pagination_pages = []
             self.current_command = ""
-        
+
         def add_user_char(self, c):
             cur_pos = curses.getsyx()
             if cur_pos[1] + 1 != curses.COLS - len(c):
@@ -88,33 +88,33 @@ class UIWindows:
                 return True
             return False
 
-        def build_option_string_array(self, options): 
-            builded_array = [] 
-            for i in options: 
-                builded_array.append(f"|{i}|") 
-            return builded_array 
-         
+        def build_option_string_array(self, options):
+            builded_array = []
+            for i in options:
+                builded_array.append(f"|{i}|")
+            return builded_array
+
         def paginate_options(self, options):
             options = list(options)
-            builded_text = " ".join(self.build_option_string_array(options)) + " (Page 0/0)" 
+            builded_text = " ".join(self.build_option_string_array(options)) + " (Page 0/0)"
             if len(builded_text) >= curses.COLS - 15:
-                builded_text = "" 
-                builded_array = [] 
-                pages = [] 
-                while len(options) > 0: 
-                    while not len(builded_text + f" (Page {len(pages)}/xxxxxx)") >= curses.COLS - 15 and len(options) > 0: 
-                        try: 
-                            builded_array.append(options.pop()) 
-                        except IndexError: 
-                            continue 
-                        builded_text = " ".join(self.build_option_string_array(builded_array)) 
-                    pages.append(builded_text) 
-                    builded_array = []     
-                    builded_text = "" 
-                count = 0 
-                for i in pages: 
-                    pages[count] = i + f" (Page {count}/{len(pages) - 1})" 
-                    count += 1 
+                builded_text = ""
+                builded_array = []
+                pages = []
+                while len(options) > 0:
+                    while not len(builded_text + f" (Page {len(pages)}/xxxxxx)") >= curses.COLS - 15 and len(options) > 0:
+                        try:
+                            builded_array.append(options.pop())
+                        except IndexError:
+                            continue
+                        builded_text = " ".join(self.build_option_string_array(builded_array))
+                    pages.append(builded_text)
+                    builded_array = []
+                    builded_text = ""
+                count = 0
+                for i in pages:
+                    pages[count] = i + f" (Page {count}/{len(pages) - 1})"
+                    count += 1
                 self.pagination_pages = pages[:: -1]
                 self.pagination_active = True
                 self.show_next_page()
@@ -137,14 +137,14 @@ class UIWindows:
         def __init__(self):
             super().__init__("chat_body")
             self.chat_log = []
-        
+
         def set_chat_log(self, chat_log):
             if chat_log == None:
                 self.chat_log = []
             else:
                 self.chat_log = chat_log
             self.refresh_chat_log()
-        
+
         def add_to_chat_log(self, message):
             self.chat_log.append(message)
             self.refresh_chat_log()
@@ -156,4 +156,4 @@ class UIWindows:
                 self.add_string(f"{i.author}: {i.content}", False, y_pos, 0)
                 y_pos -= 1
             self.refresh_window()
-                
+
