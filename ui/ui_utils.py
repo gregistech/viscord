@@ -13,8 +13,7 @@ class UIUtils:
             bottom_bar.refresh()
             return bottom_bar
         elif win_type == "chat_body":
-            chat_body = curses.newwin(curses.LINES - 3, curses.COLS - 1, 1, 0)
-            chat_body.refresh()
+            chat_body = curses.newpad(1, curses.COLS - 1)
             return chat_body
 
     def configure_main_window(stdscr):
@@ -22,4 +21,4 @@ class UIUtils:
         stdscr.nodelay(True)
         stdscr.clear()
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
-   
+

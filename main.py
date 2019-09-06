@@ -36,7 +36,7 @@ class ViscordClient(discord.Client):
     def start_ui(self):
         ui_main = UIMain(self.loop_queue, self.ui_queue)
         wrapper(ui_main.setup_ui)
-    
+
     def start_loop(self):
         loop = asyncio.new_event_loop()
         loop.run_until_complete(self.async_start_loop())
@@ -44,10 +44,10 @@ class ViscordClient(discord.Client):
     async def async_start_loop(self):
         while True:
             await self.handle_queue_tasks()
-    
+
     async def handle_queue_tasks(self):
         try:
-            new_task = self.loop_queue.get()
+            new_task = self.loop_queue.get(1)
             if new_task[0]:
                 obj = getattr(self, new_task[0])
             else:
@@ -72,14 +72,14 @@ class ViscordClient(discord.Client):
         ui_task = Thread(target=self.start_ui, name="ui_thread")
         ui_task.start()
 
+        self.discord_api.api_loop = asyncio.get_running_loop()
         loop_task = Thread(target=self.start_loop, name="loop_thread")
         loop_task.start()
 
     async def on_message(self, msg):
-        if msg.author != self.discord_api.client.user:
-            if msg.guild == self.discord_api.current_guild:
-                if msg.channel == self.discord_api.current_channel:
-                    self.ui_queue.put(("top_bar", "change_text", (f"{msg.author}: {msg.content}",) ))
+        if msg.guild == self.discord_api.current_guild:
+            if msg.channel == self.discord_api.current_channel:
+                self.ui_queue.put(("chat_body", "add_to_chat_log", (msg,)))
 
 client = ViscordClient()
 token = get_token()
