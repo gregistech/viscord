@@ -17,7 +17,7 @@ class UIMain:
                 "guild": ["discord_api", "switch_to_guild"],
                 "channels": ["discord_api", "get_all_channels"],
                 "channel": ["discord_api", "switch_to_channel"],}
-                
+
     def setup_ui(self, stdscr):
         """This is called by the curses wrapper, it configures the main window, makes the bars and starts the UI loop."""
         UIUtils.configure_main_window(stdscr)
@@ -28,7 +28,7 @@ class UIMain:
         self.bottom_bar.win.nodelay(True)
         self.chat_body = UIWindows.ChatBody()
         self.ui_loop()
-    
+
     def handle_queue_tasks(self):
         try:
             new_task = self.ui_queue.get(False)
@@ -91,7 +91,7 @@ class UIMain:
             if c == 58 and not self.bottom_bar.is_user_input:
                 self.handle_key(":")
             if self.bottom_bar.is_user_input:
-                if c == 10: 
+                if c == 10:
                     if len(self.bottom_bar.current_command) > 0:
                         self.handle_key("enter0")
                     else:
