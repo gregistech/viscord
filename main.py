@@ -81,6 +81,11 @@ class ViscordClient(discord.Client):
             if msg.channel == self.discord_api.current_channel:
                 self.ui_queue.put(("chat_body", "add_to_chat_log", (msg,)))
 
+    async def on_message_edit(self, before, after):
+        if before.guild == self.discord_api.current_guild:
+            if before.channel == self.discord_api.current_channel:
+                self.ui_queue.put(("chat_body", "edit_chat_log", (before.id, after)))
+
 client = ViscordClient()
 token = get_token()
 start_client(client, token)
