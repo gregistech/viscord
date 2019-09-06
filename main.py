@@ -37,8 +37,9 @@ class ViscordClient(discord.Client):
         ui_main = UIMain(self.loop_queue, self.ui_queue)
         wrapper(ui_main.setup_ui)
     
-    def start_loop(self, loop):
-        asyncio.run_coroutine_threadsafe(self.async_start_loop(), loop)
+    def start_loop(self):
+        loop = asyncio.new_event_loop()
+        loop.run_until_complete(self.async_start_loop())
 
     async def async_start_loop(self):
         while True:
@@ -46,7 +47,7 @@ class ViscordClient(discord.Client):
     
     async def handle_queue_tasks(self):
         try:
-            new_task = self.loop_queue.get()
+            new_task = self.loop_queue.get(1)
             if new_task[0]:
                 obj = getattr(self, new_task[0])
             else:
@@ -71,7 +72,8 @@ class ViscordClient(discord.Client):
         ui_task = Thread(target=self.start_ui, name="ui_thread")
         ui_task.start()
 
-        loop_task = Thread(target=self.start_loop, name="loop_thread", args=(asyncio.get_running_loop(),))
+        self.discord_api.api_loop = asyncio.get_running_loop()
+        loop_task = Thread(target=self.start_loop, name="loop_thread")
         loop_task.start()
 
     async def on_message(self, msg):

@@ -146,12 +146,12 @@ class UIWindows:
             self.refresh_chat_log()
         
         def add_to_chat_log(self, message):
-            self.chat_log.append(message)
+            self.chat_log.insert(0, message)
             self.refresh_chat_log()
 
         def refresh_chat_log(self):
             self.win = curses.newpad(len(self.chat_log), curses.COLS - 1)
-            y_pos = curses.LINES - 2
+            y_pos = curses.LINES - 3
             for i in self.chat_log:
                 self.add_string(f"{i.author}: {i.content}", False, y_pos, 0)
                 y_pos -= 1
