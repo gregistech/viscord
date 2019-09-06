@@ -144,6 +144,13 @@ class UIWindows:
             else:
                 self.chat_log = chat_log
             self.refresh_chat_log()
+        
+        def edit_chat_log(self, old_id, new_message):
+            for i in self.chat_log:
+                if i.id == old_id:
+                    self.chat_log[self.chat_log.index(i)] = new_message
+                    self.refresh_chat_log()
+                    return
 
         def add_to_chat_log(self, message):
             self.chat_log.insert(0, message)
@@ -153,7 +160,10 @@ class UIWindows:
             self.win = curses.newpad(len(self.chat_log), curses.COLS - 1)
             y_pos = curses.LINES - 3
             for i in self.chat_log:
-                self.add_string(f"{i.author}: {i.content}", False, y_pos, 0)
+                information = ""
+                if i.edited_at:
+                    information += " (edited)"
+                self.add_string(f"{i.author}: {i.content} {information}", False, y_pos, 0)
                 y_pos -= 1
             self.refresh_window()
 
