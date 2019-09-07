@@ -165,7 +165,7 @@ class UIWindows:
                 information = ""
                 if i.edited_at:
                     information += "(edited) "
-                self.add_string(f"{i.author}: {i.content} {information}", False, y_pos, 0)
+                self.add_string(f"[{i.created_at.strftime('%X')}] {i.author}: {i.content} {information}", False, y_pos, 0)
                 y_pos -= 1
             self.refresh_window()
 
