@@ -84,7 +84,7 @@ class UIWindows:
 
         def delete_last_char(self):
             cur_pos = curses.getsyx()
-            if cur_pos[1] > 0:
+            if cur_pos[1] > 0 and (len(self.current_message) > 0 or len(self.current_command) > 0):
                 self.delete_char(0, cur_pos[1] - 1)
                 self.refresh_window()
                 return True
