@@ -58,8 +58,11 @@ class UIMain:
     def handle_key(self, key):
         if key == 27: #ESC
             self.bottom_bar.is_user_input = False
+            self.bottom_bar.is_insert_input = False
             self.bottom_bar.is_pagination_active = False
             self.bottom_bar.current_command = ""
+            self.bottom_bar.current_message = ""
+            self.ui_queue.put(("bottom_bar", "clear_window"))
         elif key == 10: #ENTER
             if self.bottom_bar.is_user_input and len(self.bottom_bar.current_command) > 0:
                 com = self.com_interpreter.interpret(self.bottom_bar.current_command)
@@ -69,21 +72,43 @@ class UIMain:
                 self.bottom_bar.is_user_input = False
             elif self.bottom_bar.is_pagination_active:
                 self.ui_queue.put(("bottom_bar", "show_next_page"))
+            elif self.bottom_bar.is_insert_input and len(self.bottom_bar.current_message) > 0:
+                self.loop_queue.put(("discord_api", "send_message", (self.bottom_bar.current_message,)))
+                self.bottom_bar.current_message = ""
+                self.ui_queue.put(("bottom_bar", "clear_window"))
+                self.bottom_bar.is_insert_input = False
             else: 
                 self.bottom_bar.is_user_input = False
+                self.bottom_bar.is_insert_input = False
         elif key == 127: #BACKSPACE
-            if self.bottom_bar.delete_last_char():
-                self.bottom_bar.current_command = self.bottom_bar.current_command[0:-1]
+            if self.bottom_bar.is_user_input or self.bottom_bar.is_insert_input:
+                if self.bottom_bar.delete_last_char():
+                    if self.bottom_bar.is_user_input:
+                        self.bottom_bar.current_command = self.bottom_bar.current_command[0:-1]
+                    elif self.bottom_bar.is_insert_input:
+                        self.bottom_bar.current_message = self.bottom_bar.current_message[0:-1]
         elif key < 255:
             if self.bottom_bar.is_user_input:
                 c = chr(key)
                 if self.bottom_bar.add_user_char(c):
                     self.bottom_bar.current_command += c
+            if self.bottom_bar.is_insert_input:
+                c = chr(key)
+                if self.bottom_bar.add_user_char(c):
+                    self.bottom_bar.current_message += c
+            elif key == 97: #"a"
+                if not self.bottom_bar.is_user_input and not self.bottom_bar.is_insert_input and not self.bottom_bar.is_pagination_active:
+                    self.bottom_bar.change_text("Message: ")
+                    self.ui_queue.put(("bottom_bar", "change_text", ("Message: ",)))
+                    self.bottom_bar.is_insert_input = True
+                    self.bottom_bar.current_message = ""
             elif key == 58: #":"
-                self.bottom_bar.clear_window()
-                self.bottom_bar.is_user_input = True
-                self.bottom_bar.add_user_char(":")
-                self.bottom_bar.current_command += ":"
+                if not self.bottom_bar.is_user_input and not self.bottom_bar.is_insert_input and not self.bottom_bar.is_pagination_active:
+                    self.ui_queue.put(("bottom_bar", "clear_window"))
+                    self.bottom_bar.is_user_input = True
+                    self.bottom_bar.add_user_char(":")
+                    self.ui_queue.put(("bottom_bar", "add_user_char", (":",)))
+                    self.bottom_bar.current_command = ":"
 
     def handle_user_input(self):
         while True:

@@ -63,7 +63,8 @@ class DiscordAPI:
             count += 1
         self.ui_queue.put(("bottom_bar", "paginate_options", (guild_strings,)))
 
-    async def send_message(self, channel_id, *message):
-        await self.client.get_channel(int(channel_id)).send(" ".join(message))
-
-
+    async def send_message(self, message):
+        if self.current_channel:
+            asyncio.run_coroutine_threadsafe(self.current_channel.send(message), self.api_loop).result()
+        else:
+            self.ui_queue.put(("bottom_bar", "change_text", ("Select a channel first! (:channels, :channel <channel_name>)",)))
