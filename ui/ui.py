@@ -1,6 +1,7 @@
 import curses
 import sys
 import queue
+import locale
 
 from ui.ui_utils import UIUtils
 from ui.ui_windows import UIWindows
@@ -20,6 +21,7 @@ class UIMain:
 
     def setup_ui(self, stdscr):
         """This is called by the curses wrapper, it configures the main window, makes the bars and starts the UI loop."""
+        locale.setlocale(locale.LC_ALL, None)
         UIUtils.configure_main_window(stdscr)
         self.stdscr = stdscr
         self.com_interpreter = CommandInterpreter()
