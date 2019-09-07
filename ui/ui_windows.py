@@ -68,9 +68,11 @@ class UIWindows:
         def __init__(self):
             super().__init__("bottom_bar")
             self.is_user_input = False
+            self.is_insert_input = False
             self.is_pagination_active = False
             self.pagination_pages = []
             self.current_command = ""
+            self.current_message = ""
 
         def add_user_char(self, c):
             cur_pos = curses.getsyx()
@@ -162,7 +164,7 @@ class UIWindows:
             for i in self.chat_log:
                 information = ""
                 if i.edited_at:
-                    information += " (edited)"
+                    information += "(edited) "
                 self.add_string(f"{i.author}: {i.content} {information}", False, y_pos, 0)
                 y_pos -= 1
             self.refresh_window()
