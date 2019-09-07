@@ -14,18 +14,21 @@ class DiscordAPI:
         return history
 
     async def switch_to_channel(self, channel_name):
-        if channel_name == None:
-            self.current_channel = None
-            self.ui_queue.put(("chat_body", "set_chat_log", (None,)))
-        if channel_name[0] == "#":
-            channel_name = channel_name[1::]
-        self.current_channel = discord.utils.get(self.current_guild.text_channels, name=channel_name)
-        if self.current_channel:
-            channel_history = asyncio.run_coroutine_threadsafe(self.get_current_channel_history(), self.api_loop).result()
-            self.ui_queue.put(("chat_body", "set_chat_log", (channel_history,)))
-            self.ui_queue.put(("bottom_bar", "change_text", (f"You changed to channel #{self.current_channel.name}!",)))
+        if self.current_guild:
+            if channel_name == None:
+                self.current_channel = None
+                self.ui_queue.put(("chat_body", "set_chat_log", (None,)))
+            if channel_name[0] == "#":
+                channel_name = channel_name[1::]
+            self.current_channel = discord.utils.get(self.current_guild.text_channels, name=channel_name)
+            if self.current_channel:
+                channel_history = asyncio.run_coroutine_threadsafe(self.get_current_channel_history(), self.api_loop).result()
+                self.ui_queue.put(("chat_body", "set_chat_log", (channel_history,)))
+                self.ui_queue.put(("bottom_bar", "change_text", (f"You changed to channel #{self.current_channel.name}!",)))
+            else:
+                self.ui_queue.put(("bottom_bar", "change_text", (f"There are no channels named {channel_name}!",)))
         else:
-            self.ui_queue.put(("bottom_bar", "change_text", (f"There are no channels named {channel_name}!",)))
+            self.ui_queue.put(("bottom_bar", "change_text", ("Select a guild first! (:guilds, :guild <identifier>)",)))
 
     async def switch_to_guild(self, identifier, identifier_type = "count"):
         try:
