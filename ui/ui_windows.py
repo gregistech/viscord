@@ -1,6 +1,7 @@
 import curses
 
 from ui.ui_utils import UIUtils
+from textwrap import wrap
 
 class UIWindows:
     class BaseWindow:
@@ -165,7 +166,17 @@ class UIWindows:
                 information = ""
                 if i.edited_at:
                     information += "(edited) "
-                self.add_string(f"[{i.created_at.strftime('%X')}] {i.author}: {i.content} {information}", False, y_pos, 0)
-                y_pos -= 1
+                final_string = f"[{i.created_at.strftime('%X')}] {i.author}: {i.content} {information}"
+                final_lines = [final_string]
+                if len(final_string) > curses.COLS - 1:
+                    final_lines = wrap(final_string, width=curses.COLS - 1)
+                newline_lines = []
+                for string in final_lines:
+                    newline_lines += string.splitlines()
+                final_lines = newline_lines
+                final_lines.reverse()
+                for string in final_lines:
+                    self.add_string(string, False, y_pos, 0)
+                    y_pos -= 1
             self.refresh_window()
 
