@@ -25,6 +25,7 @@ class DiscordAPI:
                 channel_history = asyncio.run_coroutine_threadsafe(self.get_current_channel_history(), self.api_loop).result()
                 self.ui_queue.put(("chat_body", "set_chat_log", (channel_history,)))
                 self.ui_queue.put(("bottom_bar", "change_text", (f"You changed to channel #{self.current_channel.name}!",)))
+                self.ui_queue.put(("top_bar", "change_text", (f"#{self.current_channel.name} - {self.current_guild.name}",)))
             else:
                 self.ui_queue.put(("bottom_bar", "change_text", (f"There are no channels named {channel_name}!",)))
         else:
@@ -40,6 +41,7 @@ class DiscordAPI:
         if guild and not guild.unavailable:
             self.current_guild = guild
             self.ui_queue.put(("bottom_bar", "change_text", (f"You changed to guild {guild.name}!",)))
+            self.ui_queue.put(("top_bar", "change_text", (f"Not in channel - {self.current_guild.name}",)))
             return
         self.ui_queue.put(("bottom_bar", "change_text", ("This guild is not available!",)))
 
@@ -65,6 +67,9 @@ class DiscordAPI:
 
     async def send_message(self, message):
         if self.current_channel:
-            asyncio.run_coroutine_threadsafe(self.current_channel.send(message), self.api_loop).result()
+            try:
+                asyncio.run_coroutine_threadsafe(self.current_channel.send(message), self.api_loop).result()
+            except discord.errors.HTTPException:
+                self.ui_queue.put(("bottom_bar", "change_text", ("You can't send an empty message!",)))
         else:
             self.ui_queue.put(("bottom_bar", "change_text", ("Select a channel first! (:channels, :channel <channel_name>)",)))
