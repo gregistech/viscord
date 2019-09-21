@@ -4,7 +4,7 @@ import queue
 import locale
 
 from ui.ui_utils import UIUtils
-from ui.ui_windows import UIWindows
+from ui.ui_windows import top_bar, bottom_bar, chat_body, base_window
 from utils.command_interpreter import CommandInterpreter
 from threading import Thread
 
@@ -21,7 +21,7 @@ class UIMain:
 
     def create_and_get_windows(self):
         """Create the necessary windows and return them."""
-        return UIWindows.TopBar(), UIWindows.BottomBar(), UIWindows.ChatBody()
+        return top_bar.TopBar(), bottom_bar.BottomBar(), chat_body.ChatBody()
 
     def setup_ui(self, stdscr):
         """This is called by the curses wrapper, it configures the main window, makes the bars and starts the UI loop."""
