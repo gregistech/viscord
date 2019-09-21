@@ -19,15 +19,17 @@ class UIMain:
                 "channels": ["discord_api", "get_all_channels"],
                 "channel": ["discord_api", "switch_to_channel"],}
 
+    def create_and_get_windows(self):
+        """Create the necessary windows and return them."""
+        return UIWindows.TopBar(), UIWindows.BottomBar(), UIWindows.ChatBody()
+
     def setup_ui(self, stdscr):
         """This is called by the curses wrapper, it configures the main window, makes the bars and starts the UI loop."""
         locale.setlocale(locale.LC_ALL, None)
         UIUtils.configure_main_window(stdscr)
         self.stdscr = stdscr
         self.com_interpreter = CommandInterpreter()
-        self.top_bar = UIWindows.TopBar()
-        self.bottom_bar = UIWindows.BottomBar()
-        self.chat_body = UIWindows.ChatBody()
+        self.top_bar, self.bottom_bar, self.chat_body = self.create_and_get_windows()
         self.ui_loop()
 
     def handle_queue_tasks(self):
