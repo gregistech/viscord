@@ -42,7 +42,7 @@ class BottomBar(BaseWindow):
             builded_array = []
             pages = []
             while len(options) > 0:
-                while not len(builded_text + f" (Page {len(pages)}/xxxxxx)") >= curses.COLS - 15 and len(options) > 0:
+                while not len(builded_text + f" (Page {len(pages)}/xxxxxx)") >= curses.COLS - 30 and len(options) > 0:
                     try:
                         builded_array.append(options.pop())
                     except IndexError:
