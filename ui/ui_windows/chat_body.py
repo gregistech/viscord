@@ -7,8 +7,14 @@ class ChatBody(BaseWindow):
     def __init__(self):
         super().__init__("chat_body")
         self.chat_log = []
+        self.current_y_pos = curses.LINES - 3
+
+    def scroll_chat_log(self, value):
+        self.current_y_pos += value
+        self.refresh_chat_log()
 
     def set_chat_log(self, chat_log):
+        self.current_y_pos = curses.LINES - 3
         if chat_log == None:
             self.chat_log = []
         else:
@@ -28,7 +34,7 @@ class ChatBody(BaseWindow):
 
     def refresh_chat_log(self):
         self.win = curses.newpad(len(self.chat_log), curses.COLS - 1)
-        y_pos = curses.LINES - 3
+        y_pos = self.current_y_pos
         for i in self.chat_log:
             information = ""
             if i.edited_at:

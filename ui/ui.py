@@ -91,6 +91,14 @@ class UIMain:
                         self.bottom_bar.current_command = self.bottom_bar.current_command[0:-1]
                     elif self.bottom_bar.is_insert_input:
                         self.bottom_bar.current_message = self.bottom_bar.current_message[0:-1]
+        elif key == 65: #UP ARROW   
+            self.ui_queue.put(("chat_body", "scroll_chat_log", (1,)))
+        elif key == 66: #DOWN ARROW
+            self.ui_queue.put(("chat_body", "scroll_chat_log", (-1,)))
+        elif key == 68: #LEFT ARROW
+            pass
+        elif key == 67: #RIGHT ARROW
+            pass
         elif key < 255:
             if self.bottom_bar.is_user_input:
                 c = chr(key)
