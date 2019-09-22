@@ -10,22 +10,34 @@ class DiscordAPI:
         self.current_channel = None
     
     async def get_current_channel_history(self, limit = 100):
-        history = await self.current_channel.history(limit=limit).flatten()
-        return history
-
+        try:
+            history = await self.current_channel.history(limit=limit).flatten()
+        except discord.errors.Forbidden:
+            history = None
+        finally:
+            return history
     async def switch_to_channel(self, channel_name):
+        self.current_channel = None
         if self.current_guild:
             if channel_name == None:
-                self.current_channel = None
                 self.ui_queue.put(("chat_body", "set_chat_log", (None,)))
             if channel_name[0] == "#":
                 channel_name = channel_name[1::]
-            self.current_channel = discord.utils.get(self.current_guild.text_channels, name=channel_name)
+            writeable_channels = []
+            for x in self.current_guild.text_channels:
+                name = x.name.encode("ascii", errors="ignore").decode()
+                if name == channel_name:
+                    self.current_channel = x
             if self.current_channel:
                 channel_history = asyncio.run_coroutine_threadsafe(self.get_current_channel_history(), self.api_loop).result()
-                self.ui_queue.put(("chat_body", "set_chat_log", (channel_history,)))
-                self.ui_queue.put(("bottom_bar", "change_text", (f"You changed to channel #{self.current_channel.name}!",)))
-                self.ui_queue.put(("top_bar", "change_text", (f"#{self.current_channel.name} - {self.current_guild.name}",)))
+                if channel_history:
+                    self.ui_queue.put(("chat_body", "set_chat_log", (channel_history,)))
+                    self.ui_queue.put(("bottom_bar", "change_text", (f"You changed to channel #{self.current_channel.name}!",)))
+                    self.ui_queue.put(("top_bar", "change_text", (f"#{self.current_channel.name} - {self.current_guild.name}",)))
+                else:
+                    self.ui_queue.put(("bottom_bar", "change_text", (f"Couldn't get channel history, not switching!",)))
+                    self.ui_queue.put(("top_bar", "change_text", (f"Not in a channel - {self.current_guild.name}",)))
+                    self.current_channel = None
             else:
                 self.ui_queue.put(("bottom_bar", "change_text", (f"There are no channels named {channel_name}!",)))
         else:
@@ -50,7 +62,8 @@ class DiscordAPI:
             channels = self.current_guild.text_channels
             channel_strings = []
             for x in channels:
-                channel_strings.append(f"#{x.name}")
+                name = x.name.encode("ascii", errors="ignore").decode()
+                channel_strings.append(f"#{name}")
             self.ui_queue.put(("bottom_bar", "paginate_options", (channel_strings,)))
         else:
             self.ui_queue.put(("bottom_bar", "change_text", ("Select a guild first! (:guilds, :guild <identifier>)",)))
@@ -61,7 +74,8 @@ class DiscordAPI:
         count = 0
         for x in guilds:
             if not x.unavailable:
-                guild_strings.append(f"{count} - {x.name}")
+                name = x.name.encode("ascii", errors="ignore").decode()
+                guild_strings.append(f"{count} - {name}")
             count += 1
         self.ui_queue.put(("bottom_bar", "paginate_options", (guild_strings,)))
 
