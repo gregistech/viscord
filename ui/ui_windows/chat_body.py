@@ -39,7 +39,10 @@ class ChatBody(BaseWindow):
             information = ""
             if i.edited_at:
                 information += "(edited) "
-            final_string = f"[{i.created_at.strftime('%X')}] {i.author}: {i.content} {information}"
+            name = i.author
+            if i.author.display_name != str(i.author)[:-5]:
+                name = f"{i.author.display_name} ({str(i.author)})"
+            final_string = f"[{i.created_at.strftime('%X')}] {name}: {i.content} {information}"
             final_lines = [final_string]
             if len(final_string) > curses.COLS - 1:
                 final_lines = wrap(final_string, width=curses.COLS - 1)
