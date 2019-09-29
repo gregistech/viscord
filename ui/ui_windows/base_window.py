@@ -20,22 +20,25 @@ class BaseWindow:
     def get_input(self):
         return self.win.getch()
 
-    def add_string(self, string, refresh = True, y = None, x = None):
+    def add_string(self, string, refresh = True, y = None, x = None, ansi_mapping = {}):
         if y != None and x != None:
             x_offset = 0
-            for c in string:
+            for idx,c in enumerate(string):
+                color_mode = ansi_mapping.get(idx, curses.A_NORMAL)
                 try:
-                    self.add_char(c, y, x + x_offset)
+                    if color_mode == -1:
+                        x_offset -= 1
+                    else:
+                        self.add_char(c, y, x + idx + x_offset, color_mode)
                 except curses.error:
                     pass
-                x_offset += 1
         else:
             self.win.addstr(string)
         if refresh:
             self.refresh_window()
 
-    def add_char(self, char, y, x):
-        self.win.addstr(y, x, char)
+    def add_char(self, char, y, x, color_mode = curses.A_NORMAL):
+        self.win.addstr(y, x, char, color_mode)
         self.refresh_window()
 
     def delete_char(self, y, x):
