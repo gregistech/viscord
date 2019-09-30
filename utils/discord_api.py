@@ -33,10 +33,10 @@ class DiscordAPI:
                 if channel_history:
                     self.ui_queue.put(("chat_body", "set_chat_log", (channel_history,)))
                     self.ui_queue.put(("bottom_bar", "change_text", (f"You changed to channel #{self.current_channel.name}!",)))
-                    self.ui_queue.put(("top_bar", "change_text", (f"#{self.current_channel.name} - {self.current_guild.name}",)))
+                    self.ui_queue.put(("top_bar", "set_info", (self.current_guild.name, self.current_channel.name, self.current_channel.topic,)))
                 else:
                     self.ui_queue.put(("bottom_bar", "change_text", (f"Couldn't get channel history, not switching!",)))
-                    self.ui_queue.put(("top_bar", "change_text", (f"Not in a channel - {self.current_guild.name}",)))
+                    self.ui_queue.put(("top_bar", "set_info", (self.current_guild.name, "Not in channel",)))
                     self.current_channel = None
             else:
                 self.ui_queue.put(("bottom_bar", "change_text", (f"There are no channels named {channel_name}!",)))
@@ -53,7 +53,7 @@ class DiscordAPI:
         if guild and not guild.unavailable:
             self.current_guild = guild
             self.ui_queue.put(("bottom_bar", "change_text", (f"You changed to guild {guild.name}!",)))
-            self.ui_queue.put(("top_bar", "change_text", (f"Not in channel - {self.current_guild.name}",)))
+            self.ui_queue.put(("top_bar", "set_info", (self.current_guild.name, "Not in channel",)))
             return
         self.ui_queue.put(("bottom_bar", "change_text", ("This guild is not available!",)))
 
