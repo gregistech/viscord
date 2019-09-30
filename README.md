@@ -7,10 +7,7 @@
 To create an ncurses based Discord client with vim-like keybindings in Python.
 
 ### What is the progress?
-In short words, not usable.
-
-### When will we get a usable release?
-I hope soon.
+Usable now, not a complete replacement or a daily driver **yet**.
 
 ### How can I get my token?
 
