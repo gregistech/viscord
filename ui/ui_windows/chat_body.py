@@ -38,7 +38,6 @@ class ChatBody(BaseWindow):
                     "italic": False,
                     "bold": False,
                     "underline": False,
-                    "crossed_out": False,
                 }
         for idx,c in enumerate(content):
             if c == "*":
@@ -48,26 +47,18 @@ class ChatBody(BaseWindow):
                 else:
                     started_styles["italic"] = not started_styles["italic"]
                     ansi_mapping[idx] = -1
-                continue
             elif c == "_" and content[idx + 1] == "_":
                 started_styles["underline"] = not started_styles["underline"]
                 ansi_mapping[idx] = -1
-                continue
-            elif c == "~" and content[idx + 1] == "~":
-                started_styles["crossed_out"] = not started_styles["crossed_out"]
-                ansi_mapping[idx] = -1
-                ansi_mapping[idx + 1] = -1
-                continue
-            current_style = curses.A_NORMAL
-            if started_styles["bold"]:
-                current_style += curses.A_BOLD
-            if started_styles["italic"]:
-                current_style += curses.A_ITALIC
-            if started_styles["underline"]:
-                current_style += curses.A_UNDERLINE
-            if started_styles["crossed_out"]:
-                current_style += 9
-            ansi_mapping[idx] = current_style
+            else:
+                current_style = curses.A_NORMAL
+                if started_styles["bold"]:
+                    current_style += curses.A_BOLD
+                if started_styles["italic"]:
+                    current_style += curses.A_ITALIC
+                if started_styles["underline"]:
+                    current_style += curses.A_UNDERLINE
+                ansi_mapping[idx] = current_style
         return ansi_mapping
     
     def refresh_chat_log(self):
